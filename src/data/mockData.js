@@ -1,108 +1,127 @@
-export const styleFilters = ['Chic', 'Décontracté', 'Simple', 'Sportwear', 'Bureau', 'Voyage'];
+import React, { useMemo, useState } from 'react';
+import { SafeAreaView, ScrollView, StatusBar, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import OnboardingScreen from './src/screens/OnboardingScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import DressingScreen from './src/screens/DressingScreen';
+import CalendarScreen from './src/screens/CalendarScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import AddClothingScreen from './src/screens/AddClothingScreen';
+import { tabData } from './src/data/mockData';
 
-export const wardrobeItems = [
-  {
-    id: 1,
-    type: 'Haut',
-    name: 'Chemise beige',
-    color: 'Beige',
-    season: 'Printemps',
-    image:
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 2,
-    type: 'Bas',
-    name: 'Jean droit',
-    color: 'Bleu',
-    season: 'Toute saison',
-    image:
-      'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 3,
-    type: 'Chaussures',
-    name: 'Sneakers blanches',
-    color: 'Blanc',
-    season: 'Printemps',
-    image:
-      'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    id: 4,
-    type: 'Accessoire',
-    name: 'Sac à main',
-    color: 'Marron',
-    season: 'Automne',
-    image:
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80',
-  },
-];
+export default function App() {
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [activeTab, setActiveTab] = useState('Accueil');
+  const [selectedStyle, setSelectedStyle] = useState('Chic');
+  const [favoriteLooks, setFavoriteLooks] = useState([1]);
+  const [showAddClothing, setShowAddClothing] = useState(false);
 
-export const looks = [
-  {
-    id: 1,
-    title: 'Look du jour',
-    recommendation: 'Cheveux lâchés',
-    temp: '26°',
-    mood: 'Après-midi légère',
-    image:
-      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
-    palette: ['#E7D7C9', '#D7C1A6', '#8B6A4B'],
+  const currentTab = useMemo(() => {
+    if (activeTab === 'Dressing') return 'dressing';
+    if (activeTab === 'Calendrier') return 'calendar';
+    if (activeTab === 'Profil') return 'profile';
+    return 'home';
+  }, [activeTab]);
+
+  const toggleFavorite = (lookId) => {
+    setFavoriteLooks((current) =>
+      current.includes(lookId) ? current.filter((id) => id !== lookId) : [...current, lookId]
+    );
+  };
+
+  if (!hasCompletedOnboarding) {
+    return <OnboardingScreen onComplete={() => setHasCompletedOnboarding(true)} />;
+  }
+
+  if (showAddClothing) {
+    return (
+      <AddClothingScreen
+        onBack={() => setShowAddClothing(false)}
+        onSave={() => setShowAddClothing(false)}
+      />
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F0EA" />
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        {currentTab === 'home' && (
+          <HomeScreen
+            selectedStyle={selectedStyle}
+            setSelectedStyle={setSelectedStyle}
+            favoriteLooks={favoriteLooks}
+            toggleFavorite={toggleFavorite}
+            onAddClothing={() => setShowAddClothing(true)}
+          />
+        )}
+        {currentTab === 'dressing' && <DressingScreen onAddClothing={() => setShowAddClothing(true)} />}
+        {currentTab === 'calendar' && <CalendarScreen />}
+        {currentTab === 'profile' && <ProfileScreen />}
+      </ScrollView>
+
+      <View style={styles.tabBar}>
+        {tabData.map((tab) => {
+          const isActive = activeTab === tab;
+          return (
+            <TouchableOpacity
+              key={tab}
+              style={[styles.tabItem, isActive && styles.tabItemActive]}
+              onPress={() => setActiveTab(tab)}
+            >
+              <Text style={[styles.tabLabel, isActive && styles.tabLabelActive]}>{tab}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F5F0EA',
   },
-  {
-    id: 2,
-    title: 'Look bureau',
-    recommendation: 'Mise en beauté naturelle',
-    temp: '22°',
-    mood: 'Coup de frais le matin',
-    image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
-    palette: ['#BFD1D5', '#E8E0D6', '#A87F65'],
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F0EA',
   },
-];
-
-export const calendarDays = [
-  { day: 'Lun', active: false },
-  { day: 'Mar', active: false },
-  { day: 'Mer', active: true },
-  { day: 'Jeu', active: false },
-  { day: 'Ven', active: false },
-  { day: 'Sam', active: false },
-  { day: 'Dim', active: false },
-];
-
-export const monthDays = [
-  { label: '1', active: false },
-  { label: '2', active: false },
-  { label: '3', active: true },
-  { label: '4', active: false },
-  { label: '5', active: false },
-  { label: '6', active: false },
-  { label: '7', active: false },
-  { label: '8', active: false },
-  { label: '9', active: false },
-  { label: '10', active: false },
-  { label: '11', active: false },
-  { label: '12', active: false },
-  { label: '13', active: false },
-  { label: '14', active: false },
-  { label: '15', active: false },
-  { label: '16', active: false },
-  { label: '17', active: false },
-  { label: '18', active: false },
-  { label: '19', active: false },
-  { label: '20', active: false },
-  { label: '21', active: true },
-  { label: '22', active: false },
-  { label: '23', active: false },
-  { label: '24', active: false },
-  { label: '25', active: false },
-  { label: '26', active: false },
-  { label: '27', active: false },
-  { label: '28', active: false },
-  { label: '29', active: false },
-  { label: '30', active: false },
-];
-
-export const tabData = ['Accueil', 'Dressing', 'Calendrier'];
+  contentContainer: {
+    paddingHorizontal: 18,
+    paddingTop: 20,
+    paddingBottom: 110,
+  },
+  tabBar: {
+    position: 'absolute',
+    bottom: 10,
+    left: 18,
+    right: 18,
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+  },
+  tabItem: {
+    flex: 1,
+    borderRadius: 16,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  tabItemActive: {
+    backgroundColor: '#F2E4D7',
+  },
+  tabLabel: {
+    fontSize: 12,
+    color: '#6C5B52',
+    fontWeight: '600',
+  },
+  tabLabelActive: {
+    color: '#1E1B1B',
+  },
+});
