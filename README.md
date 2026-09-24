@@ -17,6 +17,7 @@ npm start
 
 ## Fonctionnalités MVP
 
+- Onboarding utilisateur
 - Page d'accueil avec proposition de look du jour
 - Météo du moment
 - Filtres de style
