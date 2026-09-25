@@ -49,6 +49,10 @@ export const looks = [
     image:
       'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80',
     palette: ['#E7D7C9', '#D7C1A6', '#8B6A4B'],
+    beauty: {
+      hair: 'Cheveux lâchés avec une légère ondulation',
+      makeup: 'Teint lumineux et blush doux',
+    },
   },
   {
     id: 2,
@@ -59,6 +63,10 @@ export const looks = [
     image:
       'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80',
     palette: ['#BFD1D5', '#E8E0D6', '#A87F65'],
+    beauty: {
+      hair: 'Chignon bas et volume discret',
+      makeup: 'Fard neutre et lèvres rosées',
+    },
   },
 ];
 
@@ -109,7 +117,7 @@ export const tabData = ['Accueil', 'Dressing', 'Calendrier', 'Profil'];
 
 export const profileData = {
   firstName: 'Anaïs',
-  stylePreferences: ['Chic', 'Minimal'],
+  stylePreferences: ['Chic', 'Minimal', 'Décontracté'],
   colorimetry: {
     skin: 'Claire',
     eyes: 'Marron',
@@ -120,4 +128,5 @@ export const profileData = {
     bottom: '34',
     shoes: '38',
   },
+  goals: ['Gain de temps le matin', 'Looks adaptés à la météo'],
 };
